@@ -6,14 +6,15 @@ interface Article {
     name: string
     email: string
     title: string
-    slug: string[]
+    category: string
+    tags: string[]
     content: string
 }
 
 class _Article {
     listArticle = async () => {
         try {
-            const list = await ArticleSchema.find()
+            const list = await ArticleSchema.find().populate('comments')
 
             if (list.length === 0) {
                 return {
@@ -42,7 +43,8 @@ class _Article {
                 name: Joi.string().required(),
                 email: Joi.string().required(),
                 title: Joi.string().required(),
-                slug: Joi.array().required(),
+                category: Joi.string().required(),
+                tags: Joi.array().required(),
                 content: Joi.string().required(),
             })
 
@@ -62,7 +64,8 @@ class _Article {
                 name: body.name,
                 email: body.email,
                 title: body.title,
-                slug: body.slug,
+                category: body.category,
+                tags: body.tags,
                 content: body.content
             })
 
@@ -87,7 +90,8 @@ class _Article {
                 name: Joi.string().required(),
                 email: Joi.string().required(),
                 title: Joi.string().required(),
-                slug: Joi.array().required(),
+                category: Joi.string().required(),
+                tags: Joi.array().required(),
                 content: Joi.string().required(),
             })
 
@@ -117,7 +121,8 @@ class _Article {
                 name: body.name,
                 email: body.email,
                 title: body.title,
-                slug: body.slug,
+                category: body.category,
+                tags: body.tags,
                 content: body.content
             }, { new: true })
 
@@ -172,6 +177,37 @@ class _Article {
             }
         } catch (error) {
             console.error('deleteArticle article module Error: ', error)
+
+            return {
+                status: false,
+                error
+            }
+        }
+    }
+
+    publishArticle = async (id: string) => {
+        try {
+            const article = await ArticleSchema.findById(id)
+
+            if (!article) {
+                return {
+                    status: false,
+                    code: 404,
+                    error: 'Sorry, article not found'
+                }
+            }
+
+            const update = await ArticleSchema.updateOne({
+                published: true,
+                publishedAt: Date.now()
+            })
+
+            return {
+                status: true,
+                data: 'Publish successfully'
+            }
+        } catch (error) {
+            console.error('publishArticle article module Error: ', error)
 
             return {
                 status: false,

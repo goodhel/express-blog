@@ -1,5 +1,6 @@
 import CommentSchema from "../models/comment.model";
 import Joi from 'joi'
+import ArticleSchema from "../models/article.model";
 
 interface Comment {
     id?: string
@@ -102,6 +103,16 @@ class _Comment {
                 }
             }
 
+            const article = await ArticleSchema.findById(body.article)
+
+            if (!article) {
+                return {
+                    status: false,
+                    code: 404,
+                    error: 'Sorry, article not found'
+                }
+            }
+
             const add = await CommentSchema.create({
                 article: body.article,
                 name: body.name,
@@ -109,6 +120,9 @@ class _Comment {
                 content: body.content,
                 url: body.url
             })
+
+            article.comments.push(add.id)
+            article.save()
 
             return {
                 status: true,

@@ -4,20 +4,26 @@ interface Article {
     name: string
     email: string
     title: string
-    slug: string[]
+    category: string
+    likes: number
+    tags: string[]
     content: string
     published: boolean
-    publishedAt: Date
+    publishedAt: Date,
+    comments: Types.ObjectId[]
 }
 
 const articleSchema = new Schema<Article>({
     name: { type: String, required: true },
     email: { type: String, required: true },
     title: { type: String, required: true },
-    slug: { type: [String] },
+    category: { type: String, required: true },
+    likes: { type: Number, default: 0 },
+    tags: { type: [String] },
     content: { type: String, required: true },
     published: { type: Boolean, required: true, default: false },
     publishedAt: { type: Date },
+    comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }]
 }, {
     timestamps: true
 })

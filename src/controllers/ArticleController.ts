@@ -18,7 +18,8 @@ ArticleController.get('/', async (req: Request, res: Response, _next: NextFuncti
  * @param name name person
  * @param email email person
  * @param title title article
- * @param slug slug article
+ * @param category title category
+ * @param tags tags article
  * @param content content article
  */
 ArticleController.post('/', async (req: Request, res: Response, _next: NextFunction) => {
@@ -33,7 +34,8 @@ ArticleController.post('/', async (req: Request, res: Response, _next: NextFunct
  * @param name name person
  * @param email email person
  * @param title title article
- * @param slug slug article
+ * @param category title category
+ * @param tags tags article
  * @param content content article
  */
 ArticleController.put('/', async (req: Request, res: Response, _next: NextFunction) => {
@@ -50,4 +52,14 @@ ArticleController.delete('/:id', async (req: Request, res: Response, _next: Next
     const del = await m$article.deleteArticle(req.params.id)
     
     response.sendResponse(res, del)
+})
+
+/**
+ * Publish Article
+ * @param id id article
+ */
+ArticleController.post('/publish/:id', async (req: Request, res: Response, _next: NextFunction) => {
+    const publish = await m$article.publishArticle(req.params.id)
+    
+    response.sendResponse(res, publish)
 })
