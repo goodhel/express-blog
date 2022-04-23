@@ -4,11 +4,18 @@ import m$article from "../modules/article.module";
 
 export const ArticleController = Router()
 
+interface Query {
+    sort?: string
+    limit?: string
+    page?: string
+    filter?: string
+}
+
 /**
  * List all article
  */
-ArticleController.get('/', async (req: Request, res: Response, _next: NextFunction) => {
-    const list = await m$article.listArticle()
+ArticleController.get('/', async (req: Request<{}, {}, {}, Query>, res: Response, _next: NextFunction) => {
+    const list = await m$article.listArticle(req.query)
 
     response.sendResponse(res, list)
 })

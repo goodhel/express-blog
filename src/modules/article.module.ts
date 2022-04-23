@@ -11,10 +11,41 @@ interface Article {
     content: string
 }
 
+interface Options {
+    sort?: string
+    page?: string
+    limit?: string
+    filter?: string
+}
+
 class _Article {
-    listArticle = async () => {
+    listArticle = async (options: Options) => {
         try {
-            const list = await ArticleSchema.find().populate('comments')
+            const { sort, page, limit, filter } = options
+
+            let condition = {}
+            if (filter) {
+                const filterRegex = new RegExp(filter, 'i')
+                condition = { title: filterRegex }
+            }
+
+            const query = ArticleSchema.find(condition)
+
+            if (sort) {
+                const sortBy = sort.split(',').join(' ')
+                query.sort(sortBy)
+            } else {
+                query.sort('-createdAt')
+            }
+
+            if (page && limit) {
+                query.limit(+limit * 1)
+                query.skip((+page - 1) * +limit)
+            }
+
+            query.populate('comments')
+
+            const list = await query.exec()
 
             if (list.length === 0) {
                 return {
@@ -23,9 +54,21 @@ class _Article {
                 }
             }
 
+            // count article
+            const count = await ArticleSchema.countDocuments()
+
+            let totalPage = 1
+
+            if (page && limit) {
+                totalPage = Math.ceil(count/+limit)
+            }
+
             return {
                 status: true,
-                data: list
+                data: {
+                    list,
+                    totalPage
+                }
             }
         } catch (error) {
             console.error('listArticle article module Error: ', error)
