@@ -20,6 +20,7 @@ function result2(
   // const combinedNumber = numbersOne.concat(numbersTwo.filter((item) => numbersOne.indexOf(item) < 0))
   // Combine data
   const combinedNumber = [...numbersOne, ...numbersTwo]
+  console.log(combinedNumber)
   // const deletedData = originalData.filter((value) => combinedNumber.indexOf(value) < 0)
 
   // Deleted Data 
@@ -32,8 +33,8 @@ function result2(
   // total deleted data 
   const totalDeleted = deletedData.reduce((prev, curr) => prev + curr)
 
-  console.log(totalMerge, totalDeleted)
-  return 2.21
+  const totalValue = totalMerge/totalDeleted
+  return totalValue
 }
 
 console.log(result2(originalData, numbersOne, numbersTwo))
