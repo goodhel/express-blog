@@ -17,11 +17,8 @@ function result2(
   numbersOne: number[],
   numbersTwo: number[]
 ) {
-  // const combinedNumber = numbersOne.concat(numbersTwo.filter((item) => numbersOne.indexOf(item) < 0))
   // Combine data
   const combinedNumber = [...numbersOne, ...numbersTwo]
-  console.log(combinedNumber)
-  // const deletedData = originalData.filter((value) => combinedNumber.indexOf(value) < 0)
 
   // Deleted Data 
   const deletedData = originalData.filter(
